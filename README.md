@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pocket Garden
 
-## Getting Started
+An AI garden planner in 3D. Describe a garden in plain words, for example "a small Japanese garden with a pond, a maple and a path to a bench", and an AI assistant builds it step by step as a low-poly diorama. You can accept or reject each step, then edit the garden by hand, share it as a link and get a rough cost estimate.
 
-First, run the development server:
+**Live demo:** https://pocket-garden-ivory.vercel.app
+
+## Status
+
+Early development. The 3D scene is in place: an 8×8 m plot with a grid, soft lighting, shadows and an orbit camera. The editor and the AI assistant are next.
+
+## Planned features (v1)
+
+- **Plot and scene.** An 8×8 m plot with a grid, soft light, shadows and a constrained orbit camera. *(done)*
+- **Asset catalog.** Rocks, trees, shrubs, grass, path tiles, a pond, a bench and a lantern. Click to place, drag to move with grid snapping, rotate and delete.
+- **Object list.** A 2D panel with every object in the scene, synced with the 3D selection and usable from the keyboard.
+- **Undo/redo.** Every change goes through a single command layer shared by manual edits and the AI.
+- **AI director.** A prompt field with a streamed response. Each tool call is shown as a step card with a ghost preview in the scene; accept all, accept a step, reject or stop.
+- **Step validation.** Tool call arguments are checked against a schema: the object exists in the catalog, the position is inside the plot, nothing overlaps.
+- **Share and snapshot.** The scene is serialized into a link; export to PNG.
+- **Cost estimate.** Plants and materials with quantities and prices, calculated from the scene.
+
+## Tech stack
+
+| Area | Choice |
+| --- | --- |
+| Framework | Next.js (App Router), React 19, TypeScript (strict) |
+| 3D | three.js, React Three Fiber, Drei |
+| Styling | Tailwind CSS |
+| Scene state | Zustand with a command layer *(planned)* |
+| AI | Vercel AI SDK with tool calling and streaming, Zod schemas *(planned)* |
+| Assets | Blender → glTF (GLB), compressed with gltf-transform *(planned)* |
+| Tests | Vitest, Playwright *(planned)* |
+| Hosting | Vercel |
+
+## Getting started
+
+Requires Node.js and pnpm.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Other scripts:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+pnpm build   # production build
+pnpm lint    # ESLint
+```
 
-## Learn More
+## Project structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+app/                 Next.js routes and layout
+components/scene/    3D scene: canvas, lights, plot, camera
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Assets
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Rocks, trees and other models will be made in Blender and exported to GLB. Until then the scene uses simple placeholder shapes.
 
-## Deploy on Vercel
+## Working with AI agents
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is built with AI-assisted development. Instructions for coding agents live in [AGENTS.md](AGENTS.md); Claude Code configuration is in [.claude/](.claude/) and [.mcp.json](.mcp.json).
